@@ -1,0 +1,54 @@
+version: '3'
+
+vars:
+  PYTHON_VERSION: 3.12.9
+
+tasks:
+  default:
+    desc: "Show available tasks"
+    cmds:
+      - task --list
+
+  setup:
+    desc: "Set up the Python environment and install dependencies"
+    cmds:
+      - pyenv install -s {{.PYTHON_VERSION}}
+      - pyenv local {{.PYTHON_VERSION}}
+      - poetry install
+      - poetry config virtualenvs.in-project true
+      - 'echo "Setup complete! Activate with: source .venv/bin/activate"'
+
+  run:
+    desc: "Run all examples"
+    cmds:
+      - poetry run python src/main.py
+
+  run-model-loading:
+    desc: "Run model loading examples"
+    cmds:
+      - poetry run python src/model_loading.py
+
+  notebook:
+    desc: "Launch Jupyter notebook"
+    cmds:
+      - poetry run jupyter notebook
+
+  test:
+    desc: "Run all tests"
+    cmds:
+      - poetry run pytest tests/ -v
+
+  format:
+    desc: "Format code with Black and Ruff"
+    cmds:
+      - poetry run black src/ tests/
+      - poetry run ruff check --fix src/ tests/
+
+  clean:
+    desc: "Clean up generated files"
+    cmds:
+      - find . -type d -name "__pycache__" -exec rm -rf {} +
+      - find . -type f -name "*.pyc" -delete
+      - rm -rf .pytest_cache
+      - rm -rf .ruff_cache
+      - rm -rf .mypy_cache

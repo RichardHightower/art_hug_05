@@ -1,0 +1,459 @@
+metadata:
+  version: "1.0.0"
+  timestamp: "2025-07-01T22:50:15.155852"
+  description: "Chapter 05: Tokenization: Bridging Text and Tensors"
+  generator: "yaml-project"
+  generator_version: "0.1.0"
+  author: "Hugging Face Transformers Book - Chapter 05"
+  tags:
+    - "transformers"
+    - "nlp"
+    - "chapter-05"
+    - "example"
+
+content:
+  files:
+    pyproject.toml:
+      content: |
+        [tool.poetry]
+        name = "pretrained-models"
+        version = "0.1.0"
+        description = "Working with Pre-trained Models - Working Examples"
+        authors = ["Your Name <you@example.com>"]
+        readme = "README.md"
+        packages = [{include = "src"}]
+
+        [tool.poetry.dependencies]
+        python = "^3.12"
+        transformers = "^{latest}"
+        datasets = "^{latest}"
+        accelerate = "^{latest}"
+        evaluate = "^{latest}"
+        python-dotenv = "^1.0.0"
+        pandas = "^2.1.0"
+        numpy = "^1.26.0"
+
+        [tool.poetry.group.dev.dependencies]
+        pytest = "^8.0.0"
+        black = "^24.0.0"
+        ruff = "^0.6.0"
+        jupyter = "^1.0.0"
+        ipykernel = "^6.29.0"
+
+        [build-system]
+        requires = ["poetry-core"]
+        build-backend = "poetry.core.masonry.api"
+
+        [tool.black]
+        line-length = 88
+        target-version = ['py312']
+
+        [tool.ruff]
+        line-length = 88
+        target-version = "py312"
+
+        [tool.ruff.lint]
+        select = ["E", "F", "I", "N", "UP", "B", "C4", "SIM"]
+      metadata:
+        extension: .toml
+        size_bytes: 1000
+        language: toml
+    README.md:
+      content: |
+        # Working with Pre-trained Models
+
+        This project contains working examples for Chapter 05 of the Hugging Face Transformers book.
+
+        ## Overview
+
+        Learn how to implement and understand:
+
+        ## Prerequisites
+
+        - Python 3.12 (managed via pyenv)
+        - Poetry for dependency management
+        - Go Task for build automation
+        - API keys for any required services (see .env.example)
+
+        ## Setup
+
+        1. Clone this repository
+        2. Run the setup task:
+           ```bash
+           task setup
+           ```
+        3. Copy `.env.example` to `.env` and configure as needed
+
+        ## Project Structure
+
+        ```
+        .
+        ├── src/
+        │   ├── __init__.py
+        │   ├── config.py              # Configuration and utilities
+        │   ├── main.py                # Entry point with all examples
+        │   ├── model_loading.py        # Model Loading implementation
+        │   ├── fine_tuning.py        # Fine Tuning implementation
+        │   ├── model_comparison.py        # Model Comparison implementation
+        │   ├── inference_optimization.py        # Inference Optimization implementation
+        │   └── utils.py               # Utility functions
+        ├── tests/
+        │   └── test_examples.py       # Unit tests
+        ├── .env.example               # Environment template
+        ├── Taskfile.yml               # Task automation
+        └── pyproject.toml             # Poetry configuration
+        ```
+
+        ## Running Examples
+
+        Run all examples:
+        ```bash
+        task run
+        ```
+
+        Or run individual modules:
+        ```bash
+        task run-model-loading    # Run model loading
+        task run-fine-tuning    # Run fine tuning
+        task run-model-comparison    # Run model comparison
+        ```
+
+        ## Available Tasks
+
+        - `task setup` - Set up Python environment and install dependencies
+        - `task run` - Run all examples
+        - `task test` - Run unit tests
+        - `task format` - Format code with Black and Ruff
+        - `task clean` - Clean up generated files
+
+        ## Learn More
+
+        - [Hugging Face Documentation](https://huggingface.co/docs)
+        - [Transformers Library](https://github.com/huggingface/transformers)
+        - [Book Resources](https://example.com/book-resources)
+      metadata:
+        extension: .md
+        size_bytes: 2000
+        language: markdown
+    Taskfile.yml:
+      content: |
+        version: '3'
+
+        vars:
+          PYTHON_VERSION: 3.12.9
+
+        tasks:
+          default:
+            desc: "Show available tasks"
+            cmds:
+              - task --list
+
+          setup:
+            desc: "Set up the Python environment and install dependencies"
+            cmds:
+              - pyenv install -s {{.PYTHON_VERSION}}
+              - pyenv local {{.PYTHON_VERSION}}
+              - poetry install
+              - poetry config virtualenvs.in-project true
+              - 'echo "Setup complete! Activate with: source .venv/bin/activate"'
+
+          run:
+            desc: "Run all examples"
+            cmds:
+              - poetry run python src/main.py
+
+          run-model-loading:
+            desc: "Run model loading examples"
+            cmds:
+              - poetry run python src/model_loading.py
+
+          run-fine-tuning:
+            desc: "Run fine tuning examples"
+            cmds:
+              - poetry run python src/fine_tuning.py
+
+          run-model-comparison:
+            desc: "Run model comparison examples"
+            cmds:
+              - poetry run python src/model_comparison.py
+
+          test:
+            desc: "Run all tests"
+            cmds:
+              - poetry run pytest tests/ -v
+
+          format:
+            desc: "Format code with Black and Ruff"
+            cmds:
+              - poetry run black src/ tests/
+              - poetry run ruff check --fix src/ tests/
+
+          clean:
+            desc: "Clean up generated files"
+            cmds:
+              - find . -type d -name "__pycache__" -exec rm -rf {} +
+              - find . -type f -name "*.pyc" -delete
+              - rm -rf .pytest_cache
+              - rm -rf .ruff_cache
+              - rm -rf .mypy_cache
+      metadata:
+        extension: .yml
+        size_bytes: 1200
+        language: yaml
+    src/__init__.py:
+      content: |
+        """
+        Chapter 05 Examples: Working with Pre-trained Models
+        """
+
+        __version__ = "0.1.0"
+      metadata:
+        extension: .py
+        size_bytes: 100
+        language: python
+
+    src/config.py:
+      content: |
+        """Configuration module for examples."""
+        
+        import os
+        from pathlib import Path
+        from dotenv import load_dotenv
+        
+        # Load environment variables
+        load_dotenv()
+        
+        # Project paths
+        PROJECT_ROOT = Path(__file__).parent.parent
+        DATA_DIR = PROJECT_ROOT / "data"
+        MODELS_DIR = PROJECT_ROOT / "models"
+        
+        # Create directories if they don't exist
+        DATA_DIR.mkdir(exist_ok=True)
+        MODELS_DIR.mkdir(exist_ok=True)
+        
+        # Model configurations
+        DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "bert-base-uncased")
+        BATCH_SIZE = int(os.getenv("BATCH_SIZE", "8"))
+        MAX_LENGTH = int(os.getenv("MAX_LENGTH", "512"))
+        
+        # API keys (if needed)
+        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+        ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+        HF_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
+        
+        # Device configuration
+        import torch
+        
+        def get_device():
+            """Get the best available device."""
+            if torch.backends.mps.is_available():
+                return "mps"
+            elif torch.cuda.is_available():
+                return "cuda"
+            else:
+                return "cpu"
+                
+        DEVICE = get_device()
+      metadata:
+        extension: .py
+        size_bytes: 1000
+        language: python
+
+    src/main.py:
+      content: |
+        """Main entry point for all examples."""
+        
+        import sys
+        from pathlib import Path
+        
+        # Add src to path
+        sys.path.append(str(Path(__file__).parent))
+        
+        from model_loading import run_model_loading_examples
+        from fine_tuning import run_fine_tuning_examples
+        from model_comparison import run_model_comparison_examples
+        from inference_optimization import run_inference_optimization_examples
+        
+        def print_section(title: str):
+            """Print a formatted section header."""
+            print("\n" + "=" * 60)
+            print(f"  {title}")
+            print("=" * 60 + "\n")
+        
+        def main():
+            """Run all examples."""
+            print_section("CHAPTER 05: WORKING WITH PRE-TRAINED MODELS")
+            print("Welcome! This script demonstrates the concepts from this chapter.")
+            print("Each example builds on the previous concepts.\n")
+            
+            print_section("1. MODEL LOADING")
+            run_model_loading_examples()
+            
+            print_section("2. FINE TUNING")
+            run_fine_tuning_examples()
+            
+            print_section("3. MODEL COMPARISON")
+            run_model_comparison_examples()
+            
+            print_section("CONCLUSION")
+            print("These examples demonstrate the key concepts from this chapter.")
+            print("Try modifying the code to experiment with different approaches!")
+        
+        if __name__ == "__main__":
+            main()
+      metadata:
+        extension: .py
+        size_bytes: 1500
+        language: python
+    .env.example:
+      content: |
+        # Model Configuration
+        DEFAULT_MODEL=bert-base-uncased
+        BATCH_SIZE=8
+        MAX_LENGTH=512
+        
+        # API Keys (optional, depending on chapter)
+        OPENAI_API_KEY=your-openai-key-here
+        ANTHROPIC_API_KEY=your-anthropic-key-here
+        HUGGINGFACE_TOKEN=your-hf-token-here
+        
+        # Other Configuration
+        LOG_LEVEL=INFO
+        CACHE_DIR=~/.cache/transformers
+      metadata:
+        extension: .example
+        size_bytes: 300
+        language: text
+
+    .gitignore:
+      content: |
+        # Python
+        __pycache__/
+        *.py[cod]
+        *$py.class
+        *.so
+        .Python
+        env/
+        venv/
+        .venv/
+        ENV/
+        .env
+        
+        # Poetry
+        dist/
+        *.egg-info/
+        
+        # Testing
+        .pytest_cache/
+        .coverage
+        htmlcov/
+        .tox/
+        
+        # IDE
+        .idea/
+        .vscode/
+        *.swp
+        *.swo
+        .DS_Store
+        
+        # Project specific
+        data/
+        models/
+        *.log
+        .cache/
+      metadata:
+        extension: .gitignore
+        size_bytes: 300
+        language: text
+
+    .python-version:
+      content: |
+        3.12.9
+      metadata:
+        extension: .python-version
+        size_bytes: 7
+        language: text
+    src/model_loading.py:
+      content: |
+        """Model Loading implementation."""
+        
+        from transformers import pipeline, AutoTokenizer, AutoModel
+        import torch
+        from config import get_device, DEFAULT_MODEL
+        
+        def run_model_loading_examples():
+            """Run model loading examples."""
+            
+            print(f"Loading model: {DEFAULT_MODEL}")
+            device = get_device()
+            print(f"Using device: {device}")
+            
+            # Example implementation
+            tokenizer = AutoTokenizer.from_pretrained(DEFAULT_MODEL)
+            model = AutoModel.from_pretrained(DEFAULT_MODEL)
+            
+            # Example text
+            text = "Hugging Face Transformers make NLP accessible to everyone!"
+            
+            # Tokenize
+            inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+            
+            print(f"\nInput text: {text}")
+            print(f"Tokens: {tokenizer.convert_ids_to_tokens(inputs['input_ids'][0].tolist())}")
+            print(f"Token IDs: {inputs['input_ids'][0].tolist()}")
+            
+            # Get model outputs
+            with torch.no_grad():
+                outputs = model(**inputs)
+            
+            print(f"\nModel output shape: {outputs.last_hidden_state.shape}")
+            print("Example completed successfully!")
+            
+        if __name__ == "__main__":
+            print("=== Model Loading Examples ===\n")
+            run_model_loading_examples()
+      metadata:
+        extension: .py
+        size_bytes: 1200
+        language: python
+    tests/test_examples.py:
+      content: |
+        """Unit tests for Chapter 05 examples."""
+        
+        import pytest
+        import sys
+        from pathlib import Path
+        
+        # Add src to path
+        sys.path.append(str(Path(__file__).parent.parent / "src"))
+        
+        from config import get_device
+        from model_loading import run_model_loading_examples
+        
+        def test_device_detection():
+            """Test that device detection works."""
+            device = get_device()
+            assert device in ["cpu", "cuda", "mps"]
+            
+        def test_model_loading_runs():
+            """Test that model_loading examples run without errors."""
+            # This is a basic smoke test
+            try:
+                run_model_loading_examples()
+            except Exception as e:
+                pytest.fail(f"model_loading examples failed: {e}")
+                
+        def test_imports():
+            """Test that all required modules can be imported."""
+            import transformers
+            import torch
+            import numpy
+            import pandas
+            
+            assert transformers.__version__
+            assert torch.__version__
+      metadata:
+        extension: .py
+        size_bytes: 800
+        language: python
