@@ -23,6 +23,41 @@ tasks:
     cmds:
       - poetry run python src/main.py
 
+  run-tokenization:
+    desc: "Run basic tokenization examples"
+    cmds:
+      - poetry run python src/tokenization_examples.py
+
+  run-algorithms:
+    desc: "Run tokenization algorithms comparison"
+    cmds:
+      - poetry run python src/tokenization_algorithms.py
+
+  run-custom:
+    desc: "Run custom tokenizer training examples"
+    cmds:
+      - poetry run python src/custom_tokenization.py
+
+  run-debugging:
+    desc: "Run tokenization debugging tools"
+    cmds:
+      - poetry run python src/tokenization_debugging.py
+
+  run-multimodal:
+    desc: "Run multimodal tokenization examples"
+    cmds:
+      - poetry run python src/multimodal_tokenization.py
+
+  run-advanced:
+    desc: "Run advanced tokenization techniques"
+    cmds:
+      - poetry run python src/advanced_tokenization.py
+
+  run-medical:
+    desc: "Run medical tokenization comparison examples"
+    cmds:
+      - poetry run python src/medical_tokenization_demo.py
+
   run-model-loading:
     desc: "Run model loading examples"
     cmds:
@@ -43,6 +78,13 @@ tasks:
     cmds:
       - poetry run black src/ tests/
       - poetry run ruff check --fix src/ tests/
+
+  lint:
+    desc: "Run linting checks (Black, Ruff, mypy)"
+    cmds:
+      - poetry run black --check src/ tests/
+      - poetry run ruff check src/ tests/
+#      - poetry run mypy src/ --ignore-missing-imports
 
   clean:
     desc: "Clean up generated files"
